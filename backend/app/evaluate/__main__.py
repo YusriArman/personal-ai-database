@@ -155,7 +155,7 @@ def spread_row(name: str, values: list[float]) -> str:
     return f"| {name} | {pct(s['mean'])} | {pct(s['std'])} | {pct(s['min'])} | {pct(s['max'])} |"
 
 
-def run_live(runs: int) -> int:
+def run_live(runs: int, label: str | None = None) -> int:
     settings = load_settings()
     provider = OllamaProvider(settings.ollama_url, settings.embed_model, settings.chat_model)
     health = provider.health()
@@ -255,7 +255,7 @@ def run_live(runs: int) -> int:
         "(40 notes)",
     ]
     write(
-        f"live-{settings.profile}",
+        f"live-{label or settings.profile}",
         md,
         {
             "settings": {
@@ -279,12 +279,13 @@ def main() -> int:
     sub.add_parser("deterministic", help="no model needed")
     live = sub.add_parser("live", help="needs Ollama running with both models pulled")
     live.add_argument("--runs", type=int, default=3)
+    live.add_argument("--label", help="report file suffix; defaults to the profile name")
     args = parser.parse_args()
     if args.command == "deterministic":
         return run_deterministic()
     if args.runs < 1:
         parser.error("--runs must be at least 1")
-    return run_live(args.runs)
+    return run_live(args.runs, args.label)
 
 
 if __name__ == "__main__":
