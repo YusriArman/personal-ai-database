@@ -1,0 +1,18 @@
+# App state (never commit an index of a real vault)
+data/
+*.db
+*.db-journal
+
+# Python
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+# Node
+node_modules/
+frontend/dist/
+
+# Local settings
+.env
+.DS_Store
