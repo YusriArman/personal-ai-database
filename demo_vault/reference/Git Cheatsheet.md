@@ -12,6 +12,11 @@ Commands I keep forgetting.
 - `git reset --soft HEAD~1` undoes the last commit and keeps the changes staged.
 - `git revert <commit>` creates a new commit that reverses an old one.
 
+## Habits
+
+- You should commit small changes often.
+- A commit message must say why, not what.
+
 ## Stashing
 
 - `git stash` saves uncommitted changes and cleans the working tree.

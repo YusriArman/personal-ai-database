@@ -1,0 +1,186 @@
+{
+  "n_notes": 40,
+  "class_counts": {
+    "journal": 10,
+    "meeting": 10,
+    "project": 10,
+    "reference": 10
+  },
+  "folds": 5,
+  "majority_baseline": {
+    "accuracy": 0.25,
+    "macro_f1": 0.1
+  },
+  "keyword_rule_baseline": {
+    "accuracy": 0.875,
+    "macro_f1": 0.875
+  },
+  "tfidf_logreg": {
+    "accuracy": 0.625,
+    "macro_f1": 0.6182330827067669
+  },
+  "tfidf_logreg_fold_accuracy": [
+    0.625,
+    0.625,
+    0.625,
+    0.625,
+    0.625
+  ],
+  "tfidf_logreg_dates_removed": {
+    "accuracy": 0.6,
+    "macro_f1": 0.5927033492822966
+  },
+  "confusion_matrix": {
+    "labels": [
+      "journal",
+      "meeting",
+      "project",
+      "reference"
+    ],
+    "rows_true_cols_predicted": [
+      [
+        8,
+        0,
+        1,
+        1
+      ],
+      [
+        0,
+        9,
+        1,
+        0
+      ],
+      [
+        2,
+        1,
+        3,
+        4
+      ],
+      [
+        0,
+        1,
+        4,
+        5
+      ]
+    ]
+  },
+  "top_terms": {
+    "journal": [
+      "felt",
+      "went",
+      "today",
+      "day",
+      "long",
+      "miss",
+      "spent",
+      "bed"
+    ],
+    "meeting": [
+      "2025",
+      "discussed",
+      "actions",
+      "decisions",
+      "meeting",
+      "test",
+      "attendees",
+      "meeting 2025"
+    ],
+    "project": [
+      "page",
+      "far",
+      "campus",
+      "phone",
+      "means",
+      "tracker",
+      "map",
+      "probe"
+    ],
+    "reference": [
+      "git",
+      "state",
+      "use",
+      "join",
+      "starter",
+      "changes",
+      "flour",
+      "item"
+    ]
+  },
+  "misclassified": [
+    {
+      "path": "journal/2025-02-15.md",
+      "true": "journal",
+      "predicted": "project"
+    },
+    {
+      "path": "journal/2025-03-22.md",
+      "true": "journal",
+      "predicted": "reference"
+    },
+    {
+      "path": "meetings/Internship Call with Kestrel Labs.md",
+      "true": "meeting",
+      "predicted": "project"
+    },
+    {
+      "path": "projects/Campus Map Dataset.md",
+      "true": "project",
+      "predicted": "journal"
+    },
+    {
+      "path": "projects/Greenhouse Monitor.md",
+      "true": "project",
+      "predicted": "journal"
+    },
+    {
+      "path": "projects/Internship Application Tracker.md",
+      "true": "project",
+      "predicted": "reference"
+    },
+    {
+      "path": "projects/Portfolio Website.md",
+      "true": "project",
+      "predicted": "meeting"
+    },
+    {
+      "path": "projects/Reading Tracker Script.md",
+      "true": "project",
+      "predicted": "reference"
+    },
+    {
+      "path": "projects/Sensor Calibration Log.md",
+      "true": "project",
+      "predicted": "reference"
+    },
+    {
+      "path": "projects/Study Timer CLI.md",
+      "true": "project",
+      "predicted": "reference"
+    },
+    {
+      "path": "reference/Dynamic Programming Patterns.md",
+      "true": "reference",
+      "predicted": "meeting"
+    },
+    {
+      "path": "reference/Linux Commands.md",
+      "true": "reference",
+      "predicted": "project"
+    },
+    {
+      "path": "reference/PID Tuning Guide.md",
+      "true": "reference",
+      "predicted": "project"
+    },
+    {
+      "path": "reference/Raspberry Pi Pico Pinout.md",
+      "true": "reference",
+      "predicted": "project"
+    },
+    {
+      "path": "reference/Sourdough Baking Schedule.md",
+      "true": "reference",
+      "predicted": "project"
+    }
+  ]
+}

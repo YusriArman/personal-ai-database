@@ -1,0 +1,613 @@
+{
+  "retrieval": [
+    {
+      "mode": "keyword",
+      "summary": {
+        "all": {
+          "n": 36,
+          "recall@5": 0.8194444444444444,
+          "mrr": 0.7363425925925926,
+          "ndcg@10": 0.771593781726795
+        },
+        "split=dev": {
+          "n": 18,
+          "recall@5": 0.8333333333333334,
+          "mrr": 0.7046296296296296,
+          "ndcg@10": 0.7445178711490212
+        },
+        "split=heldout": {
+          "n": 18,
+          "recall@5": 0.8055555555555556,
+          "mrr": 0.7680555555555555,
+          "ndcg@10": 0.7986696923045687
+        },
+        "kind=lexical": {
+          "n": 22,
+          "recall@5": 0.9772727272727273,
+          "mrr": 0.9696969696969696,
+          "ndcg@10": 0.9653295627046424
+        },
+        "kind=paraphrase": {
+          "n": 14,
+          "recall@5": 0.5714285714285714,
+          "mrr": 0.3696428571428571,
+          "ndcg@10": 0.46715184019017775
+        }
+      },
+      "misses": [
+        {
+          "id": "r06",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "what heat setting do I use to cook bread",
+          "recall@5": 0.0,
+          "mrr": 0.125,
+          "ndcg@10": 0.31546487678572877,
+          "top": [
+            "reference/Interview Prep Notes.md",
+            "projects/Line Follower Robot.md",
+            "journal/2025-03-08.md"
+          ],
+          "relevant": [
+            "reference/Sourdough Baking Schedule.md"
+          ]
+        },
+        {
+          "id": "r09",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "who looks after the society's money",
+          "recall@5": 0.0,
+          "mrr": 0.1,
+          "ndcg@10": 0.2890648263178879,
+          "top": [
+            "reference/Interview Prep Notes.md",
+            "reference/Markdown and Obsidian Tips.md",
+            "projects/Study Timer CLI.md"
+          ],
+          "relevant": [
+            "meetings/Club Meeting 2025-02-03.md"
+          ]
+        },
+        {
+          "id": "r15",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "which subject should I enrol in after this term",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "journal/2025-02-22.md",
+            "journal/2025-01-19.md",
+            "reference/Markdown and Obsidian Tips.md"
+          ],
+          "relevant": [
+            "meetings/Advisor Meeting 2025-01-20.md"
+          ]
+        },
+        {
+          "id": "r16",
+          "split": "heldout",
+          "kind": "lexical",
+          "query": "library management system tables",
+          "recall@5": 0.5,
+          "mrr": 1.0,
+          "ndcg@10": 0.8175295903539445,
+          "top": [
+            "meetings/Group Project Sync 2025-02-10.md",
+            "meetings/Study Group 2025-02-12.md",
+            "reference/SQL Joins Reference.md"
+          ],
+          "relevant": [
+            "meetings/Group Project Sync 2025-02-10.md",
+            "meetings/Group Project Sync 2025-02-24.md"
+          ]
+        },
+        {
+          "id": "r28",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "mobile application to record what I pay for things",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "journal/2025-03-08.md",
+            "projects/Internship Application Tracker.md",
+            "reference/Interview Prep Notes.md"
+          ],
+          "relevant": [
+            "projects/Budget Tracker App.md"
+          ]
+        },
+        {
+          "id": "r34",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "what I read on my day off",
+          "recall@5": 0.0,
+          "mrr": 0.16666666666666666,
+          "ndcg@10": 0.3562071871080222,
+          "top": [
+            "projects/Reading Tracker Script.md",
+            "reference/Sourdough Baking Schedule.md",
+            "journal/2025-02-15.md"
+          ],
+          "relevant": [
+            "journal/2025-03-22.md"
+          ]
+        },
+        {
+          "id": "r35",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "electrical interference made measurements jumpy",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Study Timer CLI.md",
+            "journal/2025-03-22.md"
+          ],
+          "relevant": [
+            "projects/Sensor Calibration Log.md",
+            "journal/2025-02-15.md"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "semantic",
+      "summary": {
+        "all": {
+          "n": 36,
+          "recall@5": 0.7083333333333334,
+          "mrr": 0.5993055555555555,
+          "ndcg@10": 0.6198597232034914
+        },
+        "split=dev": {
+          "n": 18,
+          "recall@5": 0.6111111111111112,
+          "mrr": 0.5458333333333333,
+          "ndcg@10": 0.5585544925879855
+        },
+        "split=heldout": {
+          "n": 18,
+          "recall@5": 0.8055555555555556,
+          "mrr": 0.6527777777777778,
+          "ndcg@10": 0.6811649538189974
+        },
+        "kind=lexical": {
+          "n": 22,
+          "recall@5": 0.9545454545454546,
+          "mrr": 0.8863636363636364,
+          "ndcg@10": 0.8857823232993656
+        },
+        "kind=paraphrase": {
+          "n": 14,
+          "recall@5": 0.32142857142857145,
+          "mrr": 0.14821428571428572,
+          "ndcg@10": 0.20198135162426054
+        }
+      },
+      "misses": [
+        {
+          "id": "r03",
+          "split": "dev",
+          "kind": "lexical",
+          "query": "when is the robotics competition",
+          "recall@5": 0.5,
+          "mrr": 1.0,
+          "ndcg@10": 0.8065735963827293,
+          "top": [
+            "projects/Line Follower Robot.md",
+            "journal/2025-03-01.md",
+            "reference/Dynamic Programming Patterns.md"
+          ],
+          "relevant": [
+            "projects/Line Follower Robot.md",
+            "meetings/Club Meeting 2025-02-17.md"
+          ]
+        },
+        {
+          "id": "r09",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "who looks after the society's money",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "reference/Raspberry Pi Pico Pinout.md",
+            "projects/Study Timer CLI.md",
+            "journal/2025-02-22.md"
+          ],
+          "relevant": [
+            "meetings/Club Meeting 2025-02-03.md"
+          ]
+        },
+        {
+          "id": "r11",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "stressed that I cannot keep up with lectures",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "reference/Git Cheatsheet.md",
+            "projects/Reading Tracker Script.md",
+            "meetings/Study Group 2025-02-12.md"
+          ],
+          "relevant": [
+            "journal/2025-02-01.md"
+          ]
+        },
+        {
+          "id": "r12",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "mountain walk at dawn",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "reference/SQL Joins Reference.md",
+            "projects/Line Follower Robot.md",
+            "projects/Campus Map Dataset.md"
+          ],
+          "relevant": [
+            "journal/2025-01-19.md"
+          ]
+        },
+        {
+          "id": "r15",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "which subject should I enrol in after this term",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Recipe Scaler.md",
+            "reference/Markdown and Obsidian Tips.md",
+            "reference/Git Cheatsheet.md"
+          ],
+          "relevant": [
+            "meetings/Advisor Meeting 2025-01-20.md"
+          ]
+        },
+        {
+          "id": "r16",
+          "split": "heldout",
+          "kind": "lexical",
+          "query": "library management system tables",
+          "recall@5": 0.5,
+          "mrr": 1.0,
+          "ndcg@10": 0.6131471927654584,
+          "top": [
+            "meetings/Group Project Sync 2025-02-10.md",
+            "projects/Line Follower Robot.md",
+            "projects/Budget Tracker App.md"
+          ],
+          "relevant": [
+            "meetings/Group Project Sync 2025-02-10.md",
+            "meetings/Group Project Sync 2025-02-24.md"
+          ]
+        },
+        {
+          "id": "r17",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "penalty for returning a book late",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Reading Tracker Script.md",
+            "projects/Budget Tracker App.md",
+            "projects/Recipe Scaler.md"
+          ],
+          "relevant": [
+            "meetings/Group Project Sync 2025-02-24.md"
+          ]
+        },
+        {
+          "id": "r28",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "mobile application to record what I pay for things",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Portfolio Website.md",
+            "projects/Sensor Calibration Log.md",
+            "projects/Greenhouse Monitor.md"
+          ],
+          "relevant": [
+            "projects/Budget Tracker App.md"
+          ]
+        },
+        {
+          "id": "r29",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "turned down for a job",
+          "recall@5": 0.0,
+          "mrr": 0.125,
+          "ndcg@10": 0.31546487678572877,
+          "top": [
+            "meetings/Club Meeting 2025-03-03.md",
+            "meetings/Club Meeting 2025-02-03.md",
+            "journal/2025-01-19.md"
+          ],
+          "relevant": [
+            "journal/2025-03-08.md"
+          ]
+        },
+        {
+          "id": "r33",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "making a meal for my flatmates",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "meetings/Internship Call with Kestrel Labs.md",
+            "projects/Internship Application Tracker.md",
+            "reference/SQL Joins Reference.md"
+          ],
+          "relevant": [
+            "journal/2025-02-09.md"
+          ]
+        },
+        {
+          "id": "r34",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "what I read on my day off",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "meetings/Advisor Meeting 2025-03-10.md",
+            "reference/Sourdough Baking Schedule.md",
+            "journal/2025-01-06.md"
+          ],
+          "relevant": [
+            "journal/2025-03-22.md"
+          ]
+        },
+        {
+          "id": "r35",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "electrical interference made measurements jumpy",
+          "recall@5": 0.5,
+          "mrr": 0.25,
+          "ndcg@10": 0.2640681225725909,
+          "top": [
+            "projects/Reading Tracker Script.md",
+            "projects/Budget Tracker App.md",
+            "projects/Internship Application Tracker.md"
+          ],
+          "relevant": [
+            "projects/Sensor Calibration Log.md",
+            "journal/2025-02-15.md"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "hybrid",
+      "summary": {
+        "all": {
+          "n": 36,
+          "recall@5": 0.8055555555555556,
+          "mrr": 0.716931216931217,
+          "ndcg@10": 0.7514803928497776
+        },
+        "split=dev": {
+          "n": 18,
+          "recall@5": 0.7222222222222222,
+          "mrr": 0.6462962962962963,
+          "ndcg@10": 0.6862129634954393
+        },
+        "split=heldout": {
+          "n": 18,
+          "recall@5": 0.8888888888888888,
+          "mrr": 0.7875661375661376,
+          "ndcg@10": 0.816747822204116
+        },
+        "kind=lexical": {
+          "n": 22,
+          "recall@5": 1.0,
+          "mrr": 0.9772727272727273,
+          "ndcg@10": 0.9691234653364812
+        },
+        "kind=paraphrase": {
+          "n": 14,
+          "recall@5": 0.5,
+          "mrr": 0.3078231292517007,
+          "ndcg@10": 0.40946985037067185
+        }
+      },
+      "misses": [
+        {
+          "id": "r06",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "what heat setting do I use to cook bread",
+          "recall@5": 0.0,
+          "mrr": 0.14285714285714285,
+          "ndcg@10": 0.3333333333333333,
+          "top": [
+            "projects/Line Follower Robot.md",
+            "reference/Git Cheatsheet.md",
+            "reference/Sourdough Starter Care.md"
+          ],
+          "relevant": [
+            "reference/Sourdough Baking Schedule.md"
+          ]
+        },
+        {
+          "id": "r09",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "who looks after the society's money",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Study Timer CLI.md",
+            "reference/Markdown and Obsidian Tips.md",
+            "journal/2025-02-22.md"
+          ],
+          "relevant": [
+            "meetings/Club Meeting 2025-02-03.md"
+          ]
+        },
+        {
+          "id": "r11",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "stressed that I cannot keep up with lectures",
+          "recall@5": 0.0,
+          "mrr": 0.1,
+          "ndcg@10": 0.2890648263178879,
+          "top": [
+            "reference/Git Cheatsheet.md",
+            "projects/Portfolio Website.md",
+            "meetings/Club Meeting 2025-02-17.md"
+          ],
+          "relevant": [
+            "journal/2025-02-01.md"
+          ]
+        },
+        {
+          "id": "r15",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "which subject should I enrol in after this term",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Recipe Scaler.md",
+            "reference/Markdown and Obsidian Tips.md",
+            "journal/2025-02-22.md"
+          ],
+          "relevant": [
+            "meetings/Advisor Meeting 2025-01-20.md"
+          ]
+        },
+        {
+          "id": "r17",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "penalty for returning a book late",
+          "recall@5": 0.0,
+          "mrr": 0.16666666666666666,
+          "ndcg@10": 0.3562071871080222,
+          "top": [
+            "projects/Reading Tracker Script.md",
+            "reference/SQL Joins Reference.md",
+            "meetings/Club Meeting 2025-02-03.md"
+          ],
+          "relevant": [
+            "meetings/Group Project Sync 2025-02-24.md"
+          ]
+        },
+        {
+          "id": "r28",
+          "split": "heldout",
+          "kind": "paraphrase",
+          "query": "mobile application to record what I pay for things",
+          "recall@5": 0.0,
+          "mrr": 0.0,
+          "ndcg@10": 0.0,
+          "top": [
+            "projects/Portfolio Website.md",
+            "projects/Internship Application Tracker.md",
+            "reference/Linux Commands.md"
+          ],
+          "relevant": [
+            "projects/Budget Tracker App.md"
+          ]
+        },
+        {
+          "id": "r35",
+          "split": "dev",
+          "kind": "paraphrase",
+          "query": "electrical interference made measurements jumpy",
+          "recall@5": 0.0,
+          "mrr": 0.16666666666666666,
+          "ndcg@10": 0.21840743681816419,
+          "top": [
+            "projects/Study Timer CLI.md",
+            "journal/2025-03-22.md",
+            "projects/Reading Tracker Script.md"
+          ],
+          "relevant": [
+            "projects/Sensor Calibration Log.md",
+            "journal/2025-02-15.md"
+          ]
+        }
+      ]
+    }
+  ],
+  "checkbox": {
+    "tp": 20,
+    "fp": 0,
+    "fn": 0,
+    "precision": 1.0,
+    "recall": 1.0,
+    "f1": 1.0,
+    "false_positives": [],
+    "false_negatives": []
+  },
+  "task_keyword_baseline": {
+    "tp": 8,
+    "fp": 4,
+    "fn": 3,
+    "precision": 0.6666666666666666,
+    "recall": 0.7272727272727273,
+    "f1": 0.6956521739130435,
+    "false_positives": [
+      [
+        "projects/Recipe Scaler.md",
+        "it should be 15 ml."
+      ],
+      [
+        "reference/Git Cheatsheet.md",
+        "a commit message must say why, not what."
+      ],
+      [
+        "reference/Git Cheatsheet.md",
+        "you should commit small changes often."
+      ],
+      [
+        "reference/Markdown and Obsidian Tips.md",
+        "in a code block it is only an example and should not count:"
+      ]
+    ],
+    "false_negatives": [
+      [
+        "journal/2025-01-06.md",
+        "tomorrow i will cook properly."
+      ],
+      [
+        "journal/2025-03-08.md",
+        "next week i am sending five more applications."
+      ],
+      [
+        "projects/Reading Tracker Script.md",
+        "fixing it is the next job once exams are over."
+      ]
+    ],
+    "ambiguous_predicted": 0
+  }
+}

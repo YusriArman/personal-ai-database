@@ -12,4 +12,4 @@ It splits the file on the separator line, groups highlights by book title and so
 
 ## Limits
 
-It breaks on books with a colon in the title because I used the colon as a delimiter. That bug is still there.
+It breaks on books with a colon in the title because I used the colon as a delimiter. That bug is still there. Fixing it is the next job once exams are over.
