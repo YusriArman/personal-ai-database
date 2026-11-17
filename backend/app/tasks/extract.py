@@ -3,10 +3,15 @@
 Tier 1 — checkboxes (`- [ ] thing`): parsed exactly, no model involved. These are the
 user's own explicit tasks, so they are stored as accepted.
 
-Tier 2 — model proposals: sentences that imply a task ("I need to email Dana") are
-proposed by the local model and stored as *pending*. Nothing proposed by a model
-becomes a task until the user accepts it in the review queue. Every proposal must
-point at a sentence that really exists in the note, otherwise it is dropped.
+Tier 2 — model proposals: the local model is asked about one sentence at a time,
+"is this an action item, true or false?". Sentences it says yes to are stored as
+*pending*; nothing proposed by a model becomes a task until the user accepts it in the
+review queue. Because the model only ever judges a sentence taken from the note, a
+proposal cannot refer to text that is not there.
+
+Why one sentence at a time: the first version sent the whole note and asked for a list of
+task sentences. A 3B model then listed nearly every sentence (precision 0.05 in the live
+evaluation). A yes/no question per sentence is a much easier job for a small model.
 """
 
 from __future__ import annotations
@@ -20,21 +25,39 @@ from app.ingest.parser import CHECKBOX_RE, FENCE_RE, HEADING_RE, CheckboxTask
 from app.providers.base import ModelProvider
 
 SENTENCE_SPLIT_RE = re.compile(r"(?<=[.!?])\s+")
+ABBREVIATION_RE = re.compile(r"\b(Dr|Mr|Mrs|Ms|Prof|St|vs|etc|e\.g|i\.e)\.$", re.I)
+CODE_SPAN_RE = re.compile(r"`[^`]*`")
 MAX_SENTENCES = 60
 
 SYSTEM_PROMPT = (
-    "You find action items in personal notes. An action item is something the note's "
-    "author still intends or needs to do. Do not include things already done, things "
-    "other people will do, general facts, or ideas with no commitment."
+    "You find action items in personal notes. An action item is a sentence where the author "
+    "commits to doing something specific in the future. Most sentences are NOT action items: "
+    "descriptions, facts, decisions already made, things that already happened, feelings, "
+    "instructions in reference material and things other people will do are not action items."
 )
 
-PROMPT_TEMPLATE = """Note title: {title}
+# The examples are invented and deliberately unrelated to the demo vault.
+PROMPT_TEMPLATE = """Decide for one sentence from a personal note whether it is an action item.
 
-Numbered sentences from the note:
-{sentences}
+Examples:
+Sentence: I need to email Dana about the venue.
+{{"action_item": true}}
+Sentence: Tomorrow I am booking the train tickets.
+{{"action_item": true}}
+Sentence: The venue holds 200 people.
+{{"action_item": false}}
+Sentence: We booked the venue last week.
+{{"action_item": false}}
+Sentence: Dana will send the invoice.
+{{"action_item": false}}
+Sentence: Use a sharp knife for tomatoes.
+{{"action_item": false}}
+Sentence: It would be nice to repaint the hall.
+{{"action_item": false}}
 
-Return JSON of the form {{"tasks": [{{"sentence": <number>, "task": "<short imperative>"}}]}}.
-Use only sentence numbers from the list. If there are no action items return {{"tasks": []}}."""
+Note title: {title}
+Sentence: {sentence}
+"""
 
 
 def normalise(text: str) -> str:
@@ -86,52 +109,57 @@ def candidate_sentences(body: str) -> list[str]:
         line = re.sub(r"^\s*(?:[-*+]|\d+\.)\s+", "", line).strip()
         if not line:
             continue
-        for sentence in SENTENCE_SPLIT_RE.split(line):
-            sentence = sentence.strip()
+        for sentence in split_sentences(line):
             if len(sentence) >= 8:
                 sentences.append(sentence)
     return sentences[:MAX_SENTENCES]
 
 
-def parse_proposals(reply: str, sentences: list[str]) -> list[tuple[str, str]]:
-    """Validate the model's JSON reply. Returns (task text, evidence sentence) pairs.
+def split_sentences(line: str) -> list[str]:
+    """Split a line into sentences without breaking after "Dr." or inside `code`."""
+    # Hide inline code so a "." inside it (as in `find . -name`) is not a sentence end.
+    spans: list[str] = []
 
-    Anything malformed or pointing at a sentence number that does not exist is dropped:
-    a proposal with no real evidence is a hallucination and must never reach review.
-    """
+    def hide(match: re.Match) -> str:
+        spans.append(match.group(0))
+        return f"\x00{len(spans) - 1}\x00"
+
+    pieces = SENTENCE_SPLIT_RE.split(CODE_SPAN_RE.sub(hide, line))
+    merged: list[str] = []
+    for piece in pieces:
+        if merged and ABBREVIATION_RE.search(merged[-1]):
+            merged[-1] = f"{merged[-1]} {piece}"
+        else:
+            merged.append(piece)
+    restore = lambda text: re.sub(r"\x00(\d+)\x00", lambda m: spans[int(m.group(1))], text)  # noqa: E731
+    return [restore(piece).strip() for piece in merged if piece.strip()]
+
+
+def parse_verdict(reply: str) -> bool:
+    """Read the model's JSON verdict. Anything that is not exactly
+    {"action_item": true} counts as "no": malformed output must never create a task."""
     try:
         data = json.loads(reply)
     except (json.JSONDecodeError, TypeError):
-        return []
-    items = data.get("tasks") if isinstance(data, dict) else None
-    if not isinstance(items, list):
-        return []
-    out: list[tuple[str, str]] = []
-    seen: set[int] = set()
-    for item in items:
-        if not isinstance(item, dict):
-            continue
-        number, text = item.get("sentence"), item.get("task")
-        if isinstance(number, bool) or not isinstance(number, int) or not isinstance(text, str):
-            continue
-        if not (1 <= number <= len(sentences)) or not text.strip() or number in seen:
-            continue
-        seen.add(number)
-        out.append((text.strip(), sentences[number - 1]))
-    return out
+        return False
+    return isinstance(data, dict) and data.get("action_item") is True
 
 
 def propose_for_note(provider: ModelProvider, title: str, body: str) -> list[tuple[str, str]]:
-    sentences = candidate_sentences(body)
-    if not sentences:
-        return []
-    numbered = "\n".join(f"[{i}] {s}" for i, s in enumerate(sentences, start=1))
-    reply = provider.generate(
-        PROMPT_TEMPLATE.format(title=title, sentences=numbered),
-        system=SYSTEM_PROMPT,
-        json_mode=True,
-    )
-    return parse_proposals(reply, sentences)
+    """Return (task text, evidence sentence) for each sentence the model calls a task.
+
+    The task text starts as the sentence itself; the user can reword it in review.
+    """
+    proposals: list[tuple[str, str]] = []
+    for sentence in candidate_sentences(body):
+        reply = provider.generate(
+            PROMPT_TEMPLATE.format(title=title, sentence=sentence),
+            system=SYSTEM_PROMPT,
+            json_mode=True,
+        )
+        if parse_verdict(reply):
+            proposals.append((sentence, sentence))
+    return proposals
 
 
 def propose_tasks(conn: sqlite3.Connection, provider: ModelProvider) -> dict:

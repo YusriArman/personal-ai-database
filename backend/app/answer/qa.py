@@ -19,11 +19,14 @@ from app.retrieve.search import Hit, hybrid_search
 
 REFUSAL_TOKEN = "NOT_IN_NOTES"
 REFUSAL_TEXT = "I could not find this in your notes."
+EMPTY_TEXT = "The model pointed at a passage but gave no answer. The passages are shown below."
 CITATION_RE = re.compile(r"\[(\d+)\]")
 
 SYSTEM_PROMPT = (
     "You answer questions using only the numbered sources from the user's own notes. "
-    "Cite every claim with the source number in square brackets, like [1]. "
+    "Write the answer as one or two complete sentences that state the fact itself, then "
+    "cite the source number in square brackets, like: The meeting is on 4 May [2]. "
+    "Never reply with only a source number. "
     f"If the sources do not contain the answer, reply with exactly {REFUSAL_TOKEN} and "
     "nothing else. Never use outside knowledge. Be concise."
 )
@@ -34,7 +37,8 @@ class Answer:
     question: str
     text: str
     abstained: bool
-    reason: str  # "answered", "no_sources", "low_similarity", "model_declined"
+    # "answered", "no_sources", "low_similarity", "model_declined", "empty_answer"
+    reason: str
     sources: list[Hit] = field(default_factory=list)  # sources[i] is citation [i + 1]
     cited: list[int] = field(default_factory=list)  # valid citation numbers, in order
     invalid_citations: list[int] = field(default_factory=list)
@@ -84,6 +88,10 @@ def answer_question(
         return Answer(question, REFUSAL_TEXT, True, "model_declined", sources, top_similarity=top)
 
     valid, invalid = check_citations(reply, len(sources))
+    if not CITATION_RE.sub("", reply).strip(" .,;:-\n"):
+        # The model pointed at a source without saying anything. Seen with small models:
+        # showing "[1]" as an answer would be useless, so treat it as no answer.
+        return Answer(question, EMPTY_TEXT, True, "empty_answer", sources, top_similarity=top)
     # Remove citation markers that point at nothing, so the UI never shows a dead reference.
     for number in invalid:
         reply = reply.replace(f"[{number}]", "")

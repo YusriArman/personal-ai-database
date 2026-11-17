@@ -89,9 +89,17 @@ def suggestions(
     note_id: int,
     embed_model: str,
     limit: int = 5,
-    min_similarity: float = 0.3,
+    min_zscore: float = 1.5,
+    min_similarity: float = 0.0,
 ) -> list[dict]:
-    """Notes similar to this one that are not linked to it in either direction."""
+    """Notes unusually similar to this one that are not linked to it in either direction.
+
+    "Unusually" is measured relative to this note: a candidate must be at least
+    `min_zscore` standard deviations above the note's average similarity to all other
+    notes. A fixed cut-off does not work, because embedding models differ in scale: with
+    one real model every pair of notes scored above 0.5, so a 0.3 threshold suggested
+    everything.
+    """
     vectors = note_vectors(conn, embed_model)
     if note_id not in vectors:
         return []
@@ -104,12 +112,14 @@ def suggestions(
         )
     }
     me = vectors[note_id]
-    scored = [
-        (float(vec @ me), other)
-        for other, vec in vectors.items()
-        if other != note_id and other not in linked
-    ]
-    scored = [pair for pair in scored if pair[0] >= min_similarity]
+    everyone = {other: float(vec @ me) for other, vec in vectors.items() if other != note_id}
+    if not everyone:
+        return []
+    values = np.array(list(everyone.values()))
+    mean, std = float(values.mean()), float(values.std())
+    floor = max(min_similarity, mean + min_zscore * std)
+    scored = [(sim, other) for other, sim in everyone.items() if other not in linked]
+    scored = [pair for pair in scored if pair[0] >= floor]
     scored.sort(key=lambda pair: (-pair[0], pair[1]))
     out: list[dict] = []
     for similarity, other in scored[:limit]:

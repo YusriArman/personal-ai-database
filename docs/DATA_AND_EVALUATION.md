@@ -70,6 +70,65 @@ Tasks: the checkbox parser scores F1 1.000 (20/20, and the code-block trap is ig
 The keyword-rule baseline for prose tasks scores precision 0.667, recall 0.727, F1 0.696.
 The local model has to beat that to justify its cost.
 
+## Live results so far
+
+Only one machine has been measured: the cloud container the project was built in (4 CPU
+cores, no GPU, Linux), with `nomic-embed-text` and `llama3.2:3b`, 3 runs. **Nothing has been
+measured on the Mac M4 or the Ryzen machine yet**, and `qwen2.5:7b` has not been run at all.
+Full report: `evals/reports/live-cloud-cpu.md`.
+
+Retrieval, recall@5 (36 queries):
+
+| Mode | all | lexical (22) | paraphrase (14) |
+|---|---|---|---|
+| Exact words (BM25) | 0.819 | 0.977 | 0.571 |
+| Meaning (`nomic-embed-text`) | 1.000 | 1.000 | 1.000 |
+| Both (RRF) | 0.931 | 1.000 | 0.821 |
+
+On this vault, meaning search alone beat the hybrid: fusing in the keyword ranking pulled
+three paraphrase queries down. Hybrid is still the default because exact words matter for
+names, codes and rare terms that a real vault has and this one mostly does not, but that is
+a judgement, not something this data shows. Measure on your own notes before trusting it.
+
+Grounded Q&A (18 answerable, 8 unanswerable), identical in all 3 runs: 18/18 correct, 18/18
+citing the right note, 0 wrongly refused, 8/8 correctly refused, 0 invalid citations.
+About 62–107 s per pass of 26 questions on this CPU.
+
+Prose task proposals, identical in all 3 runs: 11 true positives, 34 false positives,
+0 missed. Precision 0.244, recall 1.000, F1 0.393, about 225 s per pass.
+
+| System | Precision | Recall | F1 |
+|---|---|---|---|
+| Keyword rule (no model) | 0.667 | 0.727 | 0.696 |
+| `llama3.2:3b`, one sentence at a time | 0.244 | 1.000 | 0.393 |
+
+**The model does not beat the baseline on F1.** It finds every real task, including the
+three with no cue word that the rule misses, but three of every four things it proposes are
+wrong. In a review queue, a missed task is invisible while a wrong proposal costs one click,
+so high recall is the more useful failure; that is the argument for keeping it, and it is an
+argument, not a win.
+
+## What changed after the first live run, and why it matters
+
+The first live run (`evals/reports/live-cloud-cpu-before-fixes.md`, kept on purpose) found
+two faults that no test with the fake model could have found:
+
+| | Before | After |
+|---|---|---|
+| Task proposals F1 | 0.087 (precision 0.047: nearly every sentence proposed) | 0.393 |
+| Q&A correct | 0.667 (6 of 18 answers were only "[1]") | 1.000 |
+
+Fixes: tasks are now judged one sentence at a time instead of as a list per note; the answer
+prompt asks for a full sentence, and a reply that is only a citation marker is no longer
+shown as an answer; sentence splitting no longer breaks after "Dr." or inside code.
+
+**The "after" numbers are optimistic.** The prompts were changed after looking at failures
+on this same data, including held-out questions, and the task labels have no held-out split
+at all. So these scores are fitted to the fixture. A perfect Q&A score on 26 easy questions
+written by the note author mostly says the fixture is too easy to separate a good system
+from an adequate one. The trustworthy numbers will be the ones from questions written
+after this point, on notes the prompts were never tuned against.
+
 ## What these numbers do not tell you
 
 - **The vault is tiny and tidy.** 40 short notes by one author. A real vault is messier,

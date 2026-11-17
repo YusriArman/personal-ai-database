@@ -15,7 +15,7 @@ It reports the vault path, counts and what is wrong with the model, if anything.
 | Ask refuses questions you know are answerable | Abstain threshold too high for your embedding model | Run `make eval-live`, set `LNC_ABSTAIN_THRESHOLD` to the calibrated value |
 | Ask answers questions it should refuse | Threshold too low | Same procedure; raise it |
 | First answer takes a long time | Ollama is loading the model into memory | Normal; later answers are faster. A smaller chat model helps on the Ryzen machine |
-| "Find tasks in my writing" is slow | One model call per changed note | Normal on first run; afterwards only edited notes are re-read |
+| "Find tasks in my writing" is slow | One short model call per sentence of each changed note | Normal on first run; afterwards only edited notes are re-read |
 | A rejected task came back | The sentence it was based on was edited, which makes it a new sentence | Reject it again; unchanged sentences never return |
 | Port 5173 or 8000 already in use | Another process holds it | `make api` uses 8000; run `uvicorn … --port 8001` and change the proxy in `frontend/vite.config.ts` |
 | `make test` fails right after cloning | Dependencies not installed | `make setup` |

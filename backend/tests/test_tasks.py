@@ -1,11 +1,10 @@
-import json
 
 import pytest
 
 from app.index.indexer import rescan
 from app.providers.fake import FakeProvider
 from app.tasks import review
-from app.tasks.extract import candidate_sentences, parse_proposals, propose_tasks
+from app.tasks.extract import candidate_sentences, parse_verdict, propose_tasks
 
 
 def test_checkbox_tasks_are_accepted_with_done_state(indexed):
@@ -28,19 +27,29 @@ def test_candidate_sentences_skip_headings_code_and_checkboxes():
     assert candidate_sentences(body) == ["I need to call Sam.", "It rained."]
 
 
-def test_parse_proposals_rejects_anything_without_real_evidence():
-    sentences = ["I need to call Sam.", "It rained."]
-    reply = json.dumps({"tasks": [
-        {"sentence": 1, "task": "Call Sam"},
-        {"sentence": 9, "task": "Invented"},       # no such sentence
-        {"sentence": "2", "task": "wrong type"},
-        {"sentence": 1, "task": "duplicate"},
-        {"sentence": 2, "task": "  "},
-    ]})
-    assert parse_proposals(reply, sentences) == [("Call Sam", "I need to call Sam.")]
-    assert parse_proposals("not json", sentences) == []
-    assert parse_proposals('{"tasks": "nope"}', sentences) == []
-    assert parse_proposals("[1, 2]", sentences) == []
+def test_sentences_are_not_split_after_abbreviations_or_inside_code():
+    from app.tasks.extract import split_sentences
+
+    assert split_sentences("Met Dr. Lim today. She ok.") == ["Met Dr. Lim today.", "She ok."]
+    assert split_sentences("`find . -name x` lists files. Done!") == [
+        "`find . -name x` lists files.", "Done!",
+    ]
+
+
+def test_only_an_explicit_true_verdict_creates_a_task():
+    assert parse_verdict('{"action_item": true}') is True
+    for reply in ('{"action_item": false}', '{"action_item": "true"}', '{"action_item": 1}',
+                  '{"other": true}', "[true]", "yes", "", '{"action_item": tru'):
+        assert parse_verdict(reply) is False, reply
+
+
+def test_model_is_asked_about_one_sentence_at_a_time(indexed):
+    provider = FakeProvider()
+    propose_tasks(indexed, provider)
+    asked = [p.rstrip().rsplit("Sentence:", 1)[-1].strip() for p in provider.prompts]
+    assert "I need to email Dana about the launch window." in asked
+    assert all("\n" not in sentence for sentence in asked)
+    assert not any("Order the nozzle" in sentence for sentence in asked)  # checkboxes skipped
 
 
 def test_model_proposals_are_pending_until_reviewed(indexed, provider):

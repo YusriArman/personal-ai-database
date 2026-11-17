@@ -16,8 +16,16 @@ needed for the app to work as described.
 
 ## Quality
 
-- **Sentence splitting** for task proposals is a regex on `. ! ?`. It mis-splits
-  abbreviations ("Dr. Lim" is handled only because the gold data was checked against it).
+- **Task proposal precision.** With the 3B model about two in three proposals are wrong
+  (see the live report). Try the larger model, more examples in the prompt, or training a
+  small classifier on your own accept/reject decisions.
+- **Embedding prefixes.** Some embedding models (including `nomic-embed-text`) are documented
+  to work better when queries and documents are given different task prefixes. Not done here;
+  check the model's card, add them in `indexer.embedding_text` and `semantic_search`, and
+  measure.
+- **Sentence splitting** for task proposals is a regex on `. ! ?` with a short list of
+  abbreviations (Dr., Mr., e.g. …). Unlisted abbreviations and decimals at a line end will
+  still split wrongly.
 - **Chunk overlap.** Chunks do not overlap, so a fact spanning a section boundary can be
   split. Try a one-sentence overlap and measure.
 - **Answer correctness by substring** can be fooled. An LLM judge, or exact-match on
@@ -30,7 +38,7 @@ needed for the app to work as described.
 
 - Embeddings are loaded from SQLite on every semantic query. Fine for thousands of chunks;
   cache the matrix in memory, or move to an ANN index, beyond roughly 100k.
-- Task proposals make one model call per changed note, sequentially.
+- Task proposals make one model call per sentence of each changed note, sequentially.
 
 ## Not planned
 

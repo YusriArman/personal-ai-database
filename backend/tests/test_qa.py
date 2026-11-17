@@ -44,3 +44,9 @@ def test_model_refusal_is_respected(indexed):
 def test_empty_index_abstains(conn, provider):
     answer = answer_question(conn, provider, "anything")
     assert answer.abstained and answer.reason == "no_sources"
+
+
+def test_bare_citation_is_not_shown_as_an_answer(indexed):
+    provider = FakeProvider(script=["[1]"])
+    answer = answer_question(indexed, provider, "rockets kerosene", abstain_threshold=0.1)
+    assert answer.abstained and answer.reason == "empty_answer" and answer.sources

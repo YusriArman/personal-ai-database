@@ -66,15 +66,12 @@ class FakeProvider:
 
 def _rule_based_reply(prompt: str, json_mode: bool) -> str:
     if json_mode:
-        # Task extraction: propose lines that contain an obvious commitment phrase.
-        tasks = []
-        for line in prompt.split("\n"):
-            numbered = re.match(r"^\[(\d+)\]\s+(.*)$", line)
-            if numbered and re.search(
-                r"\b(need to|must|should|have to|remember to|todo)\b", numbered.group(2), re.I
-            ):
-                tasks.append({"sentence": int(numbered.group(1)), "task": numbered.group(2)})
-        return json.dumps({"tasks": tasks})
+        # Task extraction: the sentence is a task if it has an obvious commitment phrase.
+        sentence = prompt.rstrip().rsplit("Sentence:", 1)[-1]
+        is_task = bool(
+            re.search(r"\b(need to|must|should|have to|remember to|todo)\b", sentence, re.I)
+        )
+        return json.dumps({"action_item": is_task})
     # Q&A: quote the first source and cite it.
     source = re.search(r"^\[1\][^\n]*\n(.+)$", prompt, re.M)
     if not source:

@@ -46,7 +46,7 @@ Use `LNC_PROFILE=ryzen` on the Ryzen machine. All settings are listed in
 ## Checking it works
 
 ```
-make test        # 68 backend tests + 5 UI tests, no model needed
+make test        # 72 backend tests + 5 UI tests, no model needed
 make lint
 make eval        # deterministic evaluation -> evals/reports/deterministic.md
 make eval-live   # needs Ollama -> evals/reports/live-<profile>.md

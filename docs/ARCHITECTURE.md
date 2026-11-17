@@ -56,13 +56,16 @@ Invalid markers are removed and an answer with no valid citation is shown with a
 
 **Two ways to refuse.** Before calling the model, the best passage must reach a similarity
 threshold; otherwise the app refuses without generating anything. If the model is called, it
-can still reply `NOT_IN_NOTES`. The threshold depends on the embedding model and is
+can still reply `NOT_IN_NOTES`. A reply that is only a citation marker with no words is
+treated as no answer rather than shown. The threshold depends on the embedding model and is
 calibrated by `make eval-live` on the dev split only.
 
-**Model proposals need evidence and approval.** The model is given numbered sentences and may
-only answer with sentence numbers. A proposal pointing at a sentence that does not exist is
-discarded. Surviving proposals are *pending* until you accept them. Checkboxes are your own
-explicit tasks, so they are accepted as they are.
+**Model proposals need evidence and approval.** The model is asked a yes/no question about
+one sentence at a time, so a proposal is always a sentence that really is in the note. Only
+an exact `{"action_item": true}` counts as yes; anything malformed counts as no. Proposals
+are *pending* until you accept them. Checkboxes are your own explicit tasks, so they are
+accepted as they are. (The first design sent the whole note and asked for a list; a small
+model then listed almost every sentence. See DATA_AND_EVALUATION.md.)
 
 **Review decisions survive edits.** A task is keyed by note path, source and normalised
 text, not by a database id that changes on re-index. Rejecting a proposal and then editing

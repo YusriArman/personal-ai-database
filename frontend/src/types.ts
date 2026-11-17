@@ -57,7 +57,7 @@ export interface Answer {
   question: string;
   text: string;
   abstained: boolean;
-  reason: "answered" | "no_sources" | "low_similarity" | "model_declined";
+  reason: "answered" | "no_sources" | "low_similarity" | "model_declined" | "empty_answer";
   sources: Hit[];
   cited: number[];
   invalid_citations: number[];

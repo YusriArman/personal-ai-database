@@ -9,6 +9,7 @@ const WHY: Record<Answer["reason"], string> = {
   no_sources: "No notes matched this question at all.",
   low_similarity: "The closest notes were not similar enough to the question to trust an answer.",
   model_declined: "The model read the closest notes and found no answer in them.",
+  empty_answer: "Try asking again in different words, or read the passages directly.",
 };
 
 export function AskView() {
